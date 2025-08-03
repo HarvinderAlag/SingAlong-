@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sing along to your favorite karaoke songs across all genres and languages. Create an account to save playlists and record your covers.">
+    <meta name="keywords" content="karaoke, singing, music, lyrics, songs, vocal practice">
+    <title>Sing Along - Sing Along to Any Song</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4d4d;
+            --secondary-color: #4d79ff;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons .btn {
+            margin-left: 10px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        /* Genre Selector */
+        .genre-selector {
+            margin-bottom: 3rem;
+        }
+
+        .genre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .genre-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .genre-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .genre-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .genre-card h3 {
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Karaoke Player */
+        .karaoke-player {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .song-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .song-info p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .player-controls button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .player-controls button:hover {
+            transform: scale(1.1);
+        }
+
+        .player-controls button i {
+            font-size: 1rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 1.5rem 0;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .lyrics-container {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .lyrics-line {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .lyrics-line.active {
+            color: var(--primary-color);
+            font-weight: bold;
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .recording-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .recording-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .recording-btn i {
+            margin-right: 10px;
+        }
+
+        .recording-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Song List */
+        .song-list {
+            margin-bottom: 3rem;
+        }
+
+        .song-search {
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .song-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .song-table th, .song-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .song-table th {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .song-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .play-song-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-song-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* User Section */
+        .user-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1.5rem;
+            border: 3px solid var(--primary-color);
+        }
+
+        .user-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-info p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .user-stats {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            margin-right: 2rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .user-playlists {
+            margin-top: 2rem;
+        }
+
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .playlist-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .playlist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .playlist-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .playlist-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .playlist-songs {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .playlist-songs li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-songs li:last-child {
+            border-bottom: none;
+        }
+
+        /* Ad Spaces */
+        .ad-space {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 5px;
+        }
+
+        .ad-space p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f0f1a;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff3333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #3366ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 121, 255, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--dark-color);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--dark-color);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 0.5rem;
+            }
+
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .genre-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .player-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .player-controls {
+                margin-top: 1rem;
+            }
+
+            .user-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .user-stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .genre-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .song-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-microphone"></i> Global Karaoke
+            </a>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#genres">Genres</a></li>
+                <li><a href="#songs">Songs</a></li>
+                <li><a href="#playlists">Playlists</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="login-btn">Login</button>
+                <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Sing Your Heart Out</h1>
+            <p>Join millions of music lovers singing along to their favorite songs across all genres and languages. Create your own playlists and record your covers.</p>
+            <button class="btn btn-primary btn-lg">Start Singing Now</button>
+        </div>
+    </section>
+
+    <!-- Ad Space -->
+    <div class="container">
+        <div class="ad-space">
+            <p>Advertisement</p>
+            <!-- Replace with your Google AdSense code -->
+            <div id="ad-unit-top">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+                     crossorigin="anonymous"></script>
+                <!-- Responsive Ad Unit -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                     data-ad-slot="YOUR_AD_SLOT_ID"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Genre Selector -->
+            <section class="genre-selector" id="genres">
+                <h2 class="section-title">Choose Your Genre</h2>
+                <div class="genre-grid">
+                    <div class="genre-card" data-genre="pop">
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Pop">
+                        <h3>Pop</h3>
+                    </div>
+                    <div class="genre-card" data-genre="rock">
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Rock">
+                        <h3>Rock</h3>
+                    </div>
+                    <div class="genre-card" data-genre="hiphop">
+                        <img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Hip Hop">
+                        <h3>Hip Hop</h3>
+                    </div>
+                    <div class="genre-card" data-genre="rnb">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="R&B">
+                        <h3>R&B</h3>
+                    </div>
+                    <div class="genre-card" data-genre="country">
+                        <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Country">
+                        <h3>Country</h3>
+                    </div>
+                    <div class="genre-card" data-genre="jazz">
+                        <img src="https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Jazz">
+                        <h3>Jazz</h3>
+                    </div>
+                    <div class="genre-card" data-genre="electronic">
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Electronic">
+                        <h3>Electronic</h3>
+                    </div>
+                    <div class="genre-card" data-genre="classical">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Classical">
+                        <h3>Classical</h3>
+                    </div>
+                    <div class="genre-card" data-genre="kpop">
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="K-Pop">
+                        <h3>K-Pop</h3>
+                    </div>
+                    <div class="genre-card" data-genre="bollywood">
+                        <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Bollywood">
+                        <h3>Bollywood</h3>
+                    </div>
+                    <div class="genre-card" data-genre="latin">
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Latin">
+                        <h3>Latin</h3>
+                    </div>
+                    <div class="genre-card" data-genre="world">
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="World">
+                        <h3>World</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ad Space -->
+            <div class="ad-space">
+                <p>Advertisement</p>
+                <!-- Replace with your Google AdSense code -->
+                <div id="ad-unit-mid1">
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+                         crossorigin="anonymous"></script>
+                    <!-- Responsive Ad Unit -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_AD_SLOT_ID"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+
+            <!-- Karaoke Player -->
+            <section class="karaoke-player">
+                <div class="player-header">
+                    <div class="song-info">
+                        <h2>Bohemian Rhapsody</h2>
+                        <p>Queen • Rock • 1975</p>
+                    </div>
+                    <div class="player-controls">
+                        <button><i class="fas fa-step-backward"></i></button>
+                        <button><i class="fas fa-play"></i></button>
+                        <button><i class="fas fa-step-forward"></i></button>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="time-info">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">6:07</span>
+                </div>
+                <div class="lyrics-container">
+                    <p class="lyrics-line">Is this the real life? Is this just fantasy?</p>
+                    <p class="lyrics-line">Caught in a landslide, no escape from reality</p>
+                    <p class="lyrics-line active">Open your eyes, look up to the skies and see</p>
+                    <p class="lyrics-line">I'm just a poor boy, I need no sympathy</p>
+                    <p class="lyrics-line">Because I'm easy come, easy go, little high, little low</p>
+                    <p class="lyrics-line">Any way the wind blows doesn't really matter to me, to me</p>
+                    <p class="lyrics-line">Mama, just killed a man</p>
+                    <p class="lyrics-line">Put a gun against his head, pulled my trigger, now he's dead</p>
+                    <p class="lyrics-line">Mama, life had just begun</p>
+                    <p class="lyrics-line">But now I've gone and thrown it all away</p>
+                    <p class="lyrics-line">Mama, ooh, didn't mean to make you cry</p>
+                    <p class="lyrics-line">If I'm not back again this time tomorrow</p>
+                    <p class="lyrics-line">Carry on, carry on as if nothing really matters</p>
+                </div>
+                <div class="recording-controls">
+                    <button class="recording-btn">
+                        <i class="fas fa-microphone"></i> Record Your Cover
+                    </button>
+                </div>
+            </section>
+
+            <!-- Song List -->
+            <section class="song-list" id="songs">
+                <h2 class="section-title">Popular Songs</h2>
+                <div class="song-search">
+                    <input type="text" class="search-bar" placeholder="Search for songs, artists, or lyrics...">
+                </div>
+                <table class="song-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Genre</th>
+                            <th>Language</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bohemian Rhapsody</td>
+                            <td>Queen</td>
+                            <td>Rock</td>
+                            <td>English</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>Shape of You</td>
+                            <td>Ed Sheeran</td>
+                            <td>Pop</td>
+                            <td>English</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>Despacito</td>
+                            <td>Luis Fonsi</td>
+                            <td>Latin</td>
+                            <td>Spanish</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>Dynamite</td>
+                            <td>BTS</td>
+                            <td>K-Pop</td>
+                            <td>Korean</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>Tum Hi Ho</td>
+                            <td>Arijit Singh</td>
+                            <td>Bollywood</td>
+                            <td>Hindi</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>Yesterday</td>
+                            <td>The Beatles</td>
+                            <td>Rock</td>
+                            <td>English</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>La Vie En Rose</td>
+                            <td>Édith Piaf</td>
+                            <td>Jazz</td>
+                            <td>French</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                        <tr>
+                            <td>Hotel California</td>
+                            <td>Eagles</td>
+                            <td>Rock</td>
+                            <td>English</td>
+                            <td><button class="play-song-btn">Sing</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Ad Space -->
+            <div class="ad-space">
+                <p>Advertisement</p>
+                <!-- Replace with your Google AdSense code -->
+                <div id="ad-unit-mid2">
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+                         crossorigin="anonymous"></script>
+                    <!-- Responsive Ad Unit -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_AD_SLOT_ID"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+
+            <!-- User Section -->
+            <section class="user-section" id="playlists">
+                <h2 class="section-title">Your Karaoke Profile</h2>
+                <div class="user-profile">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User Avatar" class="user-avatar">
+                    <div class="user-info">
+                        <h2>Welcome, Sarah!</h2>
+                        <p>Karaoke Enthusiast since 2021</p>
+                        <div class="user-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">247</div>
+                                <div class="stat-label">Songs Sung</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">18</div>
+                                <div class="stat-label">Playlists</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">56</div>
+                                <div class="stat-label">Recordings</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-playlists">
+                    <h3>Your Playlists</h3>
+                    <div class="playlist-grid">
+                        <div class="playlist-card">
+                            <h3>Rock Classics</h3>
+                            <p>12 songs • Last played 2 days ago</p>
+                            <ul class="playlist-songs">
+                                <li>Bohemian Rhapsody - Queen</li>
+                                <li>Hotel California - Eagles</li>
+                                <li>Sweet Child O' Mine - Guns N' Roses</li>
+                            </ul>
+                        </div>
+                        <div class="playlist-card">
+                            <h3>Pop Party</h3>
+                            <p>15 songs • Last played 1 week ago</p>
+                            <ul class="playlist-songs">
+                                <li>Shape of You - Ed Sheeran</li>
+                                <li>Uptown Funk - Bruno Mars</li>
+                                <li>Blinding Lights - The Weeknd</li>
+                            </ul>
+                        </div>
+                        <div class="playlist-card">
+                            <h3>K-Pop Favorites</h3>
+                            <p>8 songs • Last played yesterday</p>
+                            <ul class="playlist-songs">
+                                <li>Dynamite - BTS</li>
+                                <li>How You Like That - BLACKPINK</li>
+                                <li>Love Scenario - iKON</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Global Karaoke</h3>
+                    <p>The ultimate platform for karaoke lovers to sing along to their favorite songs across all genres and languages.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#genres">Genres</a></li>
+                        <li><a href="#songs">Songs</a></li>
+                        <li><a href="#playlists">Playlists</a></li>
+                        <li><a href="#">Top Charts</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Copyright</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Global Karaoke. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Login to Your Account</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <p style="text-align: center; margin-top: 1rem;">Don't have an account? <a href="#" id="switch-to-signup">Sign up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Create Your Account</h2>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                <p style="text-align: center; margin-top: 1rem;">Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const loginModal = document.getElementById('login-modal');
+        const signupModal = document.getElementById('signup-modal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const switchToSignup = document.getElementById('switch-to-signup');
+        const switchToLogin = document.getElementById('switch-to-login');
+        
+        // Show Login Modal
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            signupModal.style.display = 'none';
+        });
+        
+        // Show Signup Modal
+        signupBtn.addEventListener('click', () => {
+            signupModal.style.display = 'flex';
+            loginModal.style.display = 'none';
+        });
+        
+        // Close Modals
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                signupModal.style.display = 'none';
+            });
+        });
+        
+        // Switch between Login and Signup
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            signupModal.style.display = 'flex';
+        });
+        
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (e.target === signupModal) {
+                signupModal.style.display = 'none';
+            }
+        });
+        
+        // Simulate karaoke progress
+        const progressBar = document.getElementById('progress-bar');
+        const currentTime = document.getElementById('current-time');
+        const lyricsLines = document.querySelectorAll('.lyrics-line');
+        
+        let progress = 0;
+        const duration = 367; // 6:07 in seconds
+        
+        function updateProgress() {
+            if (progress < duration) {
+                progress += 1;
+                const percent = (progress / duration) * 100;
+                progressBar.style.width = `${percent}%`;
+                
+                // Update time display
+                const minutes = Math.floor(progress / 60);
+                const seconds = progress % 60;
+                currentTime.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                
+                // Highlight current lyric line (simple simulation)
+                const currentLineIndex = Math.floor(progress / 30) % lyricsLines.length;
+                lyricsLines.forEach((line, index) => {
+                    if (index === currentLineIndex) {
+                        line.classList.add('active');
+                    } else {
+                        line.classList.remove('active');
+                    }
+                });
+            } else {
+                progress = 0;
+                progressBar.style.width = '0%';
+                currentTime.textContent = '0:00';
+            }
+        }
+        
+        setInterval(updateProgress, 1000);
+        
+        // Genre selection
+        const genreCards = document.querySelectorAll('.genre-card');
+        genreCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const genre = card.getAttribute('data-genre');
+                alert(`Loading ${genre} songs...`);
+                // In a real app, this would filter the song list by genre
+            });
+        });
+        
+        // Play song buttons
+        const playSongBtns = document.querySelectorAll('.play-song-btn');
+        playSongBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const songRow = btn.closest('tr');
+                const songName = songRow.cells[0].textContent;
+                const artist = songRow.cells[1].textContent;
+                alert(`Now playing: ${songName} by ${artist}`);
+                // In a real app, this would load the song into the player
+            });
+        });
+        
+        // Search functionality
+        const searchBar = document.querySelector('.search-bar');
+        searchBar.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const songRows = document.querySelectorAll('.song-table tbody tr');
+            
+            songRows.forEach(row => {
+                const songName = row.cells[0].textContent.toLowerCase();
+                const artist = row.cells[1].textContent.toLowerCase();
+                const genre = row.cells[2].textContent.toLowerCase();
+                const language = row.cells[3].textContent.toLowerCase();
+                
+                if (songName.includes(searchTerm) || 
+                    artist.includes(searchTerm) || 
+                    genre.includes(searchTerm) || 
+                    language.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
